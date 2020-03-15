@@ -1,5 +1,5 @@
 <?php
-include "PDF2Text.php";
+//include "PDF2Text.php";
 
 class ParsePsychSheet {
 
@@ -29,8 +29,8 @@ class ParsePsychSheet {
                         $entries = array();
                     }
                     $currentEvent = $line;
-                } else if (preg_match('/^\d+ (.+)/', $line, $matches)) {
-                    $entries[] = $matches[1];
+                } else if (preg_match('/^\s*\d\d?\s+(.+)/', $line, $matches)) {
+		    $entries[] = $matches[1];
                 }
             }
             fwrite($outputhandle, "\n\n".$currentEvent."\n");
