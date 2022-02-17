@@ -33,10 +33,10 @@ class ParsePsychSheet {
                         $entries = array();
                     }
                     $currentEvent = $line;
-                } else if (preg_match('/^\s*\d\d?\s+([\w ,\':\.]+)$/', $line, $matches)) {
+                } else if (preg_match('/^\s*\d\d?\s+([\w ,\':\.]+)/', $line, $matches)) {
 		            $entries[] = trim(preg_replace('/\s+/', " ", $matches[1]));
                 } else if (count($entries) > 0) {
-                    if (preg_match('/^\d*\:?\d+\.\d+/', $line, $matches)) {
+                    if (preg_match('/^\d*:?\d+\.\d+#*/', $line, $matches)) {
                         $fudge = strpos($currentEvent, " Diving") ? (strlen("".($timecount + 1)) - 1) : 0;
                         $padding = $this->createblanks(50 - strlen($entries[$timecount]) - strlen($matches[0]) - $fudge);
                         $entries[$timecount] .= "$padding $matches[0] _______________";
@@ -48,8 +48,8 @@ class ParsePsychSheet {
                         $entries[$schoolcount] .= "$padding NT _______________";
                         $timecount++;
                         $schoolcount++;
-                    } else if ($timecount == 0 && preg_match('/^[\w ]$/', $line)) {
-                        $schools = $this->getschools($line);
+                    } else if ($timecount == 0 && preg_match('/^[\w ]+/', $line) && strlen($line) > 0) {
+                        $schools = $this->getschools(trim($line));
                         foreach ($schools as $school) {
                             $entries[$schoolcount] .= ", $school";
                             $schoolcount++;
@@ -128,7 +128,7 @@ class ParsePsychSheet {
 
             if ($i < $this->lanes * $event_circleheats - $circleheatoffset) {
                 $index = $i % $event_circleheats;
-                $seed = (int)($i / $event_circlseheats) + 1;
+                $seed = (int)($i / $event_circleheats) + 1;
             } else {
                 $index = (int)(($i + $circleheatoffset) / $this->lanes);
                 $seed = ($i + $circleheatoffset) % $this->lanes + 1;
