@@ -33,8 +33,8 @@ class ParsePsychSheet {
                         $entries = array();
                     }
                     $currentEvent = $line;
-                } else if (preg_match('/^\s*\d\d?\s+([\w ,\':\.]+)/', $line, $matches)) {
-		            $entries[] = trim(preg_replace('/\s+/', " ", $matches[1]));
+                } else if (preg_match('/^\s*\d\d?\s+([\w ,\-\':\.]+)/', $line, $matches)) {
+                    $entries[] = trim(preg_replace('/\s+/', " ", $matches[1]));
                 } else if (count($entries) > 0) {
                     if (preg_match('/^\d*:?\d+\.\d+#*/', $line, $matches)) {
                         $fudge = strpos($currentEvent, " Diving") ? (strlen("".($timecount + 1)) - 1) : 0;
@@ -48,7 +48,7 @@ class ParsePsychSheet {
                         $entries[$schoolcount] .= "$padding NT _______________";
                         $timecount++;
                         $schoolcount++;
-                    } else if ($timecount == 0 && preg_match('/^[\w ]+/', $line) && strlen($line) > 0) {
+                    } else if ($timecount == 0 && preg_match('/^[\w ]+$/', $line) && strlen(trim($line)) > 0) {
                         $schools = $this->getschools(trim($line));
                         foreach ($schools as $school) {
                             $entries[$schoolcount] .= ", $school";
